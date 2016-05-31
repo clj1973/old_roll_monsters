@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     public Text playerSizeText = null;
     public Text playerHealthText = null;
     public Text playerAttackText = null;
+	public Text playerHealthTextHud = null;
 
     public GameObject playerSmallInstan;
     public GameObject playerMediumInstan;
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour {
     public Text enemySizeText = null;
     public Text enemyHealthText = null;
     public Text enemyAttackText = null;
+	public Text enemyHealthTextHud = null;
 
 	int CoinTossInt;
 
@@ -37,8 +39,18 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
    void Start () {
 
+		GameObject.Find("Button").GetComponent<Button>().enabled = false;
+		GameObject.Find("Button").transform.localScale = new Vector3(0,0,0);
 		PlayerBuild();
+		Example ();
 		EnemyBuild();
+		Example ();
+
+
+
+
+		GameObject.Find("Button").GetComponent<Button>().enabled = true;
+		GameObject.Find("Button").transform.localScale = new Vector3(1,1,1);
 
 
        // CleanRound();
@@ -51,6 +63,12 @@ public class GameManager : MonoBehaviour {
 
     }
 
+
+	IEnumerator Example() {
+		//print(Time.time);
+		yield return new WaitForSecondsRealtime(5);
+		//print(Time.time);
+	}
 
 
 	void PlayerBuild()
@@ -81,6 +99,7 @@ public class GameManager : MonoBehaviour {
         playerSizeText.text = playerSizeInt.ToString();
         playerHealthText.text = playerHealthInt.ToString();
         playerAttackText.text = playerAttackInt.ToString();
+		playerHealthTextHud.text = playerHealthText.text;
 
        int displayPlayer = System.Convert.ToInt32(playerSizeText.text);
 
@@ -194,11 +213,12 @@ public class GameManager : MonoBehaviour {
 		{
 			int playerstrike = enemyHealthInt - playerAttackInt;
 			enemyHealthInt = playerstrike;
+			enemyHealthTextHud.text = enemyHealthInt.ToString();
 
 			if (enemyHealthInt < 0)
 			{
 				Debug.Log("you win");
-
+				enemyHealthTextHud.text = "0";
 				GameObject[] enemies = GameObject.FindGameObjectsWithTag("enemygo");
 				foreach(GameObject enemygo in enemies)
 					GameObject.Destroy(enemygo);
@@ -219,10 +239,12 @@ public class GameManager : MonoBehaviour {
 			
 			int enemystrike = playerHealthInt - enemyAttackInt;
 			playerHealthInt = enemystrike;
+			playerHealthTextHud.text = playerHealthInt.ToString();
 
 			if (playerHealthInt < 0)
 			{
 				Debug.Log("you lost");
+				playerHealthTextHud.text = "0";
 
 				GameObject[] player = GameObject.FindGameObjectsWithTag("playergo");
 				foreach(GameObject playergo in player)
